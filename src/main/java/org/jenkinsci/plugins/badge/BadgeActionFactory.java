@@ -1,10 +1,11 @@
 package org.jenkinsci.plugins.badge;
 
 import hudson.Extension;
-import hudson.model.AbstractProject;
 import hudson.model.Action;
 import hudson.model.BallColor;
+import hudson.model.Job;
 import hudson.model.TransientProjectActionFactory;
+import jenkins.model.TransientActionFactory;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -14,7 +15,7 @@ import java.util.Collections;
  * @author Kohsuke Kawaguchi
  */
 @Extension
-public class BadgeActionFactory extends TransientProjectActionFactory {
+public class BadgeActionFactory extends TransientActionFactory<Job> {
 
     private final ImageResolver iconResolver;
 
@@ -23,7 +24,12 @@ public class BadgeActionFactory extends TransientProjectActionFactory {
     }
 
     @Override
-    public Collection<? extends Action> createFor(AbstractProject target) {
+    public Class<Job> type() {
+        return Job.class;
+    }
+
+    @Override
+    public Collection<? extends Action> createFor(Job target) {
         return Collections.singleton(new BadgeAction(this,target));
     }
 
